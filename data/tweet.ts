@@ -33,10 +33,10 @@ const tweets = [
   {
     id: 't3',
     user: {
-      id: 'u1',
-      username: 'mintakan_',
-      name: 'Valerie',
-      image: 'https://pbs.twimg.com/media/EuTok_hU4AAzixG?format=jpg&name=large'
+      id: 'u3',
+      username: 'foodie_',
+      name: 'Foodie',
+      image: 'https://pbs.twimg.com/media/EubSMIjVcAM9oAm?format=jpg&name=4096x4096'
     },
     createdAt: '2021-02-17T01:00:00.000Z',
     content: 'A foodie\'s life',
