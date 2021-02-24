@@ -9,6 +9,9 @@ import HomeScreen from '../screens/HomeScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { BottomTabParamList, HomeNavigatorParamList, TabTwoParamList } from '../types';
 import ProfilePicture from "../components/ProfilePicture";
+import {useEffect, useState} from "react";
+import {API, Auth, graphqlOperation} from "aws-amplify";
+import {getUser} from "../Users/miaoyuli/TwitterClone/graphql/queries";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -65,6 +68,31 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>['name']
 const TabOneStack = createStackNavigator<HomeNavigatorParamList>();
 
 function HomeNavigator() {
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Get the current user
+    const fetchUser = async () => {
+
+      const userInfo = await Auth.currentAuthenticatedUser({ bypassCache: true });
+      if(!userInfo) {
+        return;
+      }
+
+      try {
+        const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.attributes.sub }));
+        if (userData) {
+          setUser(userData.data.getUser);
+          console.log(userInfo);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    fetchUser();
+  }, []);
+
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
@@ -85,7 +113,7 @@ function HomeNavigator() {
             <MaterialCommunityIcons name={"star-four-points-outline"} size={30} color={Colors.light.tint}/>
           ),
           headerLeft: () => (
-            <ProfilePicture size={40} image={'https://pbs.twimg.com/media/EuTok_hU4AAzixG?format=jpg&name=large'} />
+            <ProfilePicture size={40} image={user?.image} /> // will display random image coz image: getRandomImage() was set in App.tsx
           )
         }}
       />
